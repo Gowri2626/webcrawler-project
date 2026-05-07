@@ -4,6 +4,8 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Path;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.time.Clock;
 import java.time.ZonedDateTime;
 import java.util.Objects;
@@ -59,10 +61,15 @@ return klass.cast(proxy);
   }
 
   @Override
-  public void writeData(Path path) {
-    // TODO: Write the ProfilingState data to the given file path. If a file already exists at that
-    //       path, the new data should be appended to the existing file.
-  }
+  public void writeData(Path path) throws IOException {
+    try (Writer writer = Files.newBufferedWriter(
+            path,
+            StandardOpenOption.CREATE,
+            StandardOpenOption.APPEND)) {
+
+        writeData(writer);
+    }
+}
 
   @Override
   public void writeData(Writer writer) throws IOException {
